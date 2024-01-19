@@ -1,0 +1,75 @@
+# SPDX-FileCopyrightText: Copyright (c) 2024 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+services:
+  vst:
+    image: nvcr.io/e7ep4mig3lne/release/vst:v1.2.37_aarch64
+    user: "0:0"
+    network_mode: "host"
+    runtime: nvidia
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "8192m"
+        max-file: "3"
+    container_name: vst
+    entrypoint: sh -c '/root/vst_release/launch_vst --debug-level 3 2>&1 | tee -a /root/vst_release/webroot/log/vst.log'
+    volumes:
+      - ./config/vst/vst_config.json:/root/vst_release/configs/vst_config.json
+      - ./config/vst/vst_storage.json:/root/vst_release/configs/vst_storage.json
+      - /data/vst-volume:/root/store
+      - /data/logging-volume:/root/vst_release/webroot/log
+      - /usr/lib/aarch64-linux-gnu/nvidia/:/usr/lib/aarch64-linux-gnu/tegra/
+    deploy:
+      resources:
+        limits:
+          memory: 5600M
+      restart_policy:
+        condition: always
+
+  genai:
+    image: mmj:genai
+    user: "0:0"
+    network_mode: "host"
+    runtime: nvidia
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "8192m"
+        max-file: "3"
+    environment:
+      STREAM_INPUT: http://0.0.0.0:81
+      REDIS_HOST: 0.0.0.0
+      REDIS_PORT: 6379
+      REDIS_STREAM: genai
+      RTSP_OUT: rtsp://0.0.0.0:5011/out
+      FLASK_PORT: 5010
+    restart: always
+    container_name: mmj_genai
+    volumes:
+      - /tmp/argus_socket:/tmp/argus_socket
+      - /etc/enctune.conf:/etc/enctune.conf
+      - /etc/nv_tegra_release:/etc/nv_tegra_release
+      - /tmp/nv_jetson_model:/tmp/nv_jetson_model
+    command: /mmj_genai/docker_start.sh
+    depends_on:
+      vst:
+        condition: service_started
+    deploy:
+      resources:
+        limits:
+          memory: 5600M
+      restart_policy:
+        condition: always

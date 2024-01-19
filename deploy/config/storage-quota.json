@@ -1,0 +1,71 @@
+{
+	"default-group" : "logusers",
+	"default-group-id" : "150",
+	"jetson-quota" : [
+		{
+			"name" : "vst",
+			"id" : 2000,
+			"quota" : 1358954496,
+			"volume" : "vst-volume",
+			"in-group" : "logusers"
+		},
+		{
+			"name" : "emdx",
+			"id" : 2001,
+			"quota" : 524288000,
+			"volume" : "emdx-volume",
+			"in-group" : "logusers"
+		},
+		{
+			"name" : "ingress",
+			"id" : 2002,
+			"quota" : 1048576,
+			"volume" : "ingress-secrets-volume",
+			"in-group" : "logusers"
+		},
+		{
+			"name" : "redis",
+			"id" : 2003,
+			"quota" : 5242880,
+			"volume" : "redis-volume",
+			"in-group" : "logusers"
+		},
+		{
+			"name" : "logging",
+			"id" : 2004,
+			"quota" : 10485760,
+			"volume" : "logging-volume",
+			"in-group" : "logusers",
+			"share-volume" : "true"
+		},
+		{
+			"name" : "monitoring",
+			"id" : 2005,
+			"quota" : 5242880,
+			"volume" : "monitoring-volume",
+			"dirs" : "db",
+			"in-group" : "logusers"
+		},
+		{
+			"name" : "deepstream",
+			"id" : 2006,
+			"quota" : 10485760,
+			"volume" : "deepstream-volume",
+			"in-group" : "logusers"
+		},
+		{
+			"name": "vodi",
+			"id" : 2007,
+			"quota" : 104857600,
+			"volume" : "vodi-volume",
+			"in-group" : "logusers"
+		},
+		{
+			"name": "iotgateway",
+			"id" : 2008,
+			"quota" : 1048576,
+			"volume" : "iotgateway-volume",
+			"in-group" : "logusers"
+		}
+	]
+}
