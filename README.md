@@ -37,15 +37,46 @@ To run the reference application, you will need to follow the jetson setup, buil
 
 ### Prerequisites: Jetson Setup
 
-- To setup your Jetson with the necessary software to run Metropolis Microservices, please go through the Quickstart Guide of the Metropolis on Jetson documentation found [here](https://docs.nvidia.com/moj/setup/quick-start.html) and follow the prepartion steps up to but not including "Install Application Bundle". This will explain how to setup an NGC account, install a BSP to your Jetson and install the platform services that the generative AI application will integrate with. 
+You must follow all the setup steps for the application to build and run properly. 
 
-- Add your user to the docker group to allow docker command execution without sudo. Restart your terminal after running the following. 
+#### Metropolis Microservices
+To setup your Jetson with the necessary software to run Metropolis Microservices, please go through the Quickstart Guide of the Metropolis on Jetson documentation found [here](https://docs.nvidia.com/moj/setup/quick-start.html) and follow the prepartion steps up to but not including "Install Application Bundle". This will explain how to setup an NGC account, install a BSP to your Jetson and install the platform services that the generative AI application will integrate with. 
+
+#### Docker Setup
+
+To build the docker conatiner, your docker settings must have the "default-runtime" set to "nvidia". 
+
+To do this, modify the /etc/docker/daemon.json file on your system and add ```"default-runtime": "nvidia"```
+
+```
+{
+    "runtimes": {
+        "nvidia": {
+            "path": "nvidia-container-runtime",
+            "runtimeArgs": []
+        }
+    },
+
+    "default-runtime": "nvidia"
+}
+
+```
+
+Restart docker for the changes to take effect. 
+```
+sudo systemctl restart docker
+```
+
+
+Add your user to the docker group to allow docker command execution without sudo. Restart your terminal after running the following. 
 ```
 sudo groupadd docker
 sudo usermod -aG docker $USER
 ```
 
-- The generative AI container requires the jetson model to be written to /tmp/nv_jetson_model. Please run the following command before deployment. 
+
+#### Misc
+The generative AI container requires the jetson model to be written to /tmp/nv_jetson_model. Please run the following command before deployment. 
 ```
 cat /proc/device-tree/model > /tmp/nv_jetson_model
 ```
