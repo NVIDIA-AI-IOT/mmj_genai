@@ -62,7 +62,11 @@ services:
       - /tmp/argus_socket:/tmp/argus_socket
       - /etc/enctune.conf:/etc/enctune.conf
       - /etc/nv_tegra_release:/etc/nv_tegra_release
-      - /tmp/nv_jetson_model:/tmp/nv_jetson_model
+      - type: bind
+        source: /tmp/nv_jetson_model
+        target: /tmp/nv_jetson_model
+        read_only: True
+
     command: /mmj_genai/docker_start.sh
     depends_on:
       vst:

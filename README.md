@@ -262,3 +262,37 @@ python3 redis_viewer.py
 To further understand how to take a geneartive AI model and build an application that is compatible with Metropolis Microservcies, look at the [README](src/README.md) in the ```src``` folder. 
 
 To learn how to use docker compose to deploy the containerized application with VST, look at the [README](deploy/README.md) in the ```deploy``` folder. 
+
+
+## Troubleshooting
+
+### #1
+If you run 'docker compose up -d' to deploy the application and see this error 
+
+```
+Error response from daemon: failed to create task for container: failed to create shim task: OCI runtime create failed: runc create failed: unable to start container process: error during container init: error mounting "/tmp/nv_jetson_model" to rootfs at "/tmp/nv_jetson_model": mount /tmp/nv_jetson_model:/tmp/nv_jetson_model (via /proc/self/fd/6), flags: 0x5000: not a directory: unknown: Are you trying to mount a directory onto a file (or vice-versa)? Check if the specified host path exists and is the expected type
+```
+
+The container was unable to mount the /tmp/nv_jetson_model file and likely created a directory instead. Delete the directory and use cat to output your jetson model to the /tmp/nv_jetson_model folder with these two commands:
+
+```
+sudo rmdir /tmp/nv_jetson_model
+cat /proc/device-tree/model > /tmp/nv_jetson_model
+```
+
+Then try to deploy again. 
+
+### #2
+If you are unable to access VST http://jetson-ip:30080/vst after deployment, you can also try accessing it at 
+
+```http://jetson-ip:81```  
+
+This bypasses the API Gateway so is not recommended, but will allow you to confirm if VST is running. 
+
+If VST is accesible on port 81 but not port 30080, then there is an issue with the API gateway. You can try to restart the API Gateway by running:
+
+```
+sudo systemctl restart jetson-ingress
+```
+
+If you are still unable to access VST through the API Gateway (port 30080) then there may be an issue with your Ingress configuration file. Ingress configuration is located at /opt/nvidia/jetson/services/ingress/config. Check the deployment [readme](deploy/README.md) and the API gateway [documentation](https://docs.nvidia.com/moj/platform-services/ingress.html) for more information. 
