@@ -15,6 +15,7 @@
 
 import argparse 
 from queue import Queue
+from time import sleep 
 
 #nanoowl and jetson utils must be installed properly for these imports to work. Follow the setup.sh script. 
 from nanoowl.owl_predictor import OwlPredictor
@@ -97,7 +98,15 @@ if __name__ == "__main__":
     while(True):
 
         # capture the next image
-        image = v_input.Capture()
+        try:
+            image = v_input.Capture()
+        except Exception as e:
+            skip_counter += 1
+            print(e)
+            print("Failed to capture input frame. Trying again")
+            sleep(1/33)
+            continue 
+
 
         #Get prompt updates from flask
         if not flask_queue.empty():
