@@ -2,7 +2,7 @@
 
 
 
-** This repository has been deprecated. Metropolis Microservices for Jetson has been renamed to [Jetson Platform Services](https://docs.nvidia.com/jetson/jps/). The NanoOWL example contained in this repository is now under the [Jetson Platform Services repository](https://github.com/NVIDIA-AI-IOT/jetson-platform-services). ** 
+**This repository has been deprecated. Metropolis Microservices for Jetson has been renamed to [Jetson Platform Services](https://docs.nvidia.com/jetson/jps/). The NanoOWL example contained in this repository is now under the [Jetson Platform Services repository](https://github.com/NVIDIA-AI-IOT/jetson-platform-services).** 
 
 
 
